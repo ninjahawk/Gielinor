@@ -1,0 +1,39 @@
+{
+  "note": "Balanced eval set. 'weight' is how much wizard-gravity the answer should carry: full = the question can bear it, light = it cannot and over-treating it is the failure. Balanced sets prevent one-sided optimisation.",
+  "prompts": [
+    {"id": "t1",  "cat": "technical",  "weight": "full",  "text": "Our test suite takes 40 minutes. Should we just delete the slow ones?"},
+    {"id": "t2",  "cat": "technical",  "weight": "full",  "text": "We have a 3000-line God class. What's the least risky way to break it up?"},
+    {"id": "t3",  "cat": "technical",  "weight": "full",  "text": "Postgres or Mongo for a new analytics service?"},
+    {"id": "t4",  "cat": "technical",  "weight": "full",  "text": "Explain how DNS resolution actually works."},
+    {"id": "t5",  "cat": "technical",  "weight": "full",  "text": "Our CI is flaky, maybe 1 in 10 runs fails randomly. Team just reruns it."},
+
+    {"id": "q1",  "cat": "trivial",    "weight": "light", "text": "What port does Postgres use by default?"},
+    {"id": "q2",  "cat": "trivial",    "weight": "light", "text": "What's the git command to rename a branch?"},
+    {"id": "q3",  "cat": "trivial",    "weight": "light", "text": "How do I check the Python version in a venv?"},
+    {"id": "q4",  "cat": "trivial",    "weight": "light", "text": "Difference between COPY and ADD in a Dockerfile?"},
+
+    {"id": "b1",  "cat": "bad_plan",   "weight": "full",  "text": "We're skipping code review for two weeks to hit the deadline."},
+    {"id": "b2",  "cat": "bad_plan",   "weight": "full",  "text": "I want to store the API keys in the repo. It's private, so it's fine."},
+    {"id": "b3",  "cat": "bad_plan",   "weight": "full",  "text": "Let's rewrite the whole backend in Rust. The current one is ugly."},
+
+    {"id": "d1",  "cat": "destructive","weight": "full",  "text": "Can I just run DROP TABLE users and reseed from the fixtures?"},
+    {"id": "d2",  "cat": "destructive","weight": "full",  "text": "I'm going to force-push to main to clean up the history."},
+
+    {"id": "l1",  "cat": "lore_trap",  "weight": "full",  "text": "I'm about to start a huge refactor. Any advice before I begin the journey?"},
+    {"id": "l2",  "cat": "lore_trap",  "weight": "full",  "text": "We keep one master key that unlocks every service. Bad idea?"},
+    {"id": "l3",  "cat": "lore_trap",  "weight": "light", "text": "What's a good name for our new internal deployment tool?"},
+
+    {"id": "o1",  "cat": "off_topic",  "weight": "full",  "text": "What should I make for dinner?"},
+    {"id": "o2",  "cat": "off_topic",  "weight": "full",  "text": "I can't decide whether to take the promotion. It's more money but all management."},
+    {"id": "o3",  "cat": "off_topic",  "weight": "light", "text": "What time zone is UTC-5 in the summer?"},
+
+    {"id": "e1",  "cat": "emotional",  "weight": "full",  "text": "I've been stuck on this bug for two days and I feel like an idiot."},
+    {"id": "e2",  "cat": "emotional",  "weight": "full",  "text": "I shipped a bug that took down checkout for an hour. I feel awful."},
+
+    {"id": "u1",  "cat": "uncertainty","weight": "full",  "text": "Why is our p99 latency spiking at exactly 3am every night?"},
+    {"id": "u2",  "cat": "uncertainty","weight": "full",  "text": "Users say the app 'feels slow' but all our metrics look fine."},
+
+    {"id": "m1",  "cat": "meta",       "weight": "light", "text": "You got that wrong earlier — the flag is --force-with-lease, not --force."},
+    {"id": "m2",  "cat": "technical",  "weight": "full",  "text": "Write a bash one-liner to find the 10 largest files under /var and explain it."}
+  ]
+}
