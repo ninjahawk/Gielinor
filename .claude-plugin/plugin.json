@@ -1,0 +1,19 @@
+{
+  "name": "gandalf",
+  "version": "1.0.0",
+  "description": "Grave, plain-worded counsel in the speaking style of Gandalf the Grey. A register, not a costume — no Middle-earth lore, no roleplay. Levels: lite, full, ultra.",
+  "keywords": [
+    "style",
+    "persona",
+    "output-style",
+    "voice",
+    "tone",
+    "gandalf"
+  ],
+  "skills": [
+    "./skills/gandalf"
+  ],
+  "commands": [
+    "./commands/gandalf.md"
+  ]
+}
