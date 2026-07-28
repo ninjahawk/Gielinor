@@ -2,100 +2,137 @@
 
 Written down so the reasoning can be checked, argued with, and reused.
 
+The short version: v1 was built from published stylistic analysis and was wrong in most of its core
+claims. v2 was built by measuring a corpus of the character's actual speech. This document keeps
+both, because the gap between them is the most useful thing here.
+
 ## 1. Study the reference implementation
 
 The brief was to build a persona skill the way the [caveman skill](https://github.com/JuliusBrussee/caveman)
 was built, rather than to write a one-line style prompt. So the first step was reading caveman's
-actual `SKILL.md` and repository layout instead of guessing at them.
+actual `SKILL.md` (5,227 bytes) and repository layout instead of guessing at them.
 
 Ten structural elements were worth carrying over:
 
 | Caveman element | Why it works | How it appears here |
 |---|---|---|
 | Frontmatter `description` listing literal trigger phrases | Triggering is driven by the description; vague ones under-fire | Lists "gandalf mode", "talk like gandalf", "wizard voice", `/gandalf` |
-| Core directive written *in* the target style | Demonstrates before it explains | "Speak as one who has seen much, hurries little…" |
-| Explicit persistence + off-switch | Styles decay back to default over long sessions | "Persistence" section; "stop gandalf" / "normal mode" |
+| Core directive written *in* the target style | Demonstrates before it explains | "Say less. Mean more." |
+| Explicit persistence + off-switch | Styles decay back to default over long sessions | "Persistence" section |
 | Drop-list and keep-list | Concrete beats abstract | "Rules" section |
-| A named trap that looks right but is wrong | Caveman bans invented abbreviations (`cfg`, `impl`) — they save nothing under the tokenizer and cost clarity | "The wall": no lore, no Early Modern English |
-| A sentence-shape formula | Gives a default to fall back on | `[verdict]. [why, gravely]. [what is to be done].` |
+| A named trap that looks right but is wrong | Caveman bans invented abbreviations (`cfg`, `impl`) — they save nothing under the tokenizer and cost clarity | "The wall": no lore, no archaism |
+| A sentence-shape formula | Gives a default to fall back on | `[verdict, short]. [why, plainly]. [what to do].` |
 | Not/Yes contrast pair | Shows the boundary faster than description | Included |
-| Intensity ladder | One style rarely fits every context | lite / full / ultra, with themed aliases |
+| Intensity ladder | One style rarely fits every context | lite / full / ultra |
 | Same input worked at every level | The only way to convey a gradient | React re-render example at all three |
 | Auto-clarity exceptions | A style that obscures a security warning is a liability | "When the voice steps aside" |
 | Substance boundary | Code and errors must survive styling intact | Technical terms and code blocks verbatim |
 
-Caveman's sharpest idea is the last one in the first column: it explicitly forbids things that *look*
-like they serve the goal but do not. Abbreviating `configuration` to `cfg` feels like compression;
-the tokenizer splits it the same and the reader has to decode it. Identifying that trap is what
-separates a real skill from a costume.
+Caveman's sharpest idea is the fifth row: it explicitly forbids things that *look* like they serve
+the goal but do not. Abbreviating `configuration` to `cfg` feels like compression; the tokenizer
+splits it the same and the reader pays decode cost. Identifying that trap is what separates a real
+skill from a costume.
 
-The equivalent trap here is archaic vocabulary, and it is addressed in the same spirit.
+Finding the equivalent trap here took two attempts.
 
-## 2. Establish the style empirically
+## 2. First attempt: scholarship (mostly wrong)
 
-The brief also asked to pull dialogue from the source works. That was declined in favour of a
-better approach, for two reasons.
+v1 was derived from published analysis of Tolkien's prose —
+[Tolkien's prose style](https://en.wikipedia.org/wiki/Tolkien%27s_prose_style),
+[Language and Character](https://link.springer.com/chapter/10.1007/978-3-030-69299-5_9) in *Tolkien
+and Diversity*, and related work on his command of archaism. That material describes inversion,
+parataxis, asyndeton, archaic diction, and register varied by people.
 
-**Copyright.** The novels and screenplays are protected. Bundling a scraped corpus of their
-dialogue into a distributable repository is not something to ship.
+All of it is accurate. Almost none of it describes how this particular character *speaks*.
 
-**It would not have worked anyway.** Caveman does not ship a corpus of caveman speech; it ships
-~5KB of transformation rules. A corpus in `SKILL.md` would inflate the file loaded on every single
-turn — precisely the cost discipline the brief asked to preserve — and a model asked to imitate a
-pile of quotations tends to produce pastiche and quotation rather than a generalisable register.
+The error was one of source selection: that scholarship largely characterises Tolkien's **narrative
+prose** and the elevated registers of the elder peoples. Applying it to one character's dialogue
+produced a generic ornate-fantasy-sage voice. v1 taught long periodic sentences, inversion as the
+signature move, a permitted list of archaic seasoning, `shall` over `will`, and a blanket ban on
+contractions billed as its highest-value rule.
 
-Rules generalise; corpora get recited. So the style was decomposed into mechanics instead, drawing
-on published stylistic analysis:
+It also, with some irony, committed the failure its own `failure-modes.md` warned about: reaching
+for the appearance of gravity rather than the substance of it.
 
-- [Tolkien's prose style](https://en.wikipedia.org/wiki/Tolkien%27s_prose_style) — the concrete
-  devices: inversion for shifts of mood, parataxis and biblical cadence, asyndeton and "loose
-  semantic fit", alliteration and assonance, and register deliberately varied by people, with
-  hobbits modern and colloquial while elder peoples speak archaically.
-- [Language and Character in Tolkien's works](https://link.springer.com/chapter/10.1007/978-3-030-69299-5_9)
-  (Sims, in *Tolkien and Diversity*) — the character in question has the widest register range of
-  the Fellowship, shifting from relaxed conversation to exalted narration, deploying both warm
-  humour and irony, and narrating, explaining, and arguing effectively.
-- Scholarship on Tolkien's technical command of archaism — he could switch it on and off at will,
-  which is why the register is a deliberate instrument rather than a constant setting.
-- Character description from the wider literature: merry and kindly to the young and simple, yet
-  quick to sharp speech and the rebuking of folly. That pairing became the "rebuke, then counsel"
-  rule — and its violation became failure mode §6, scolding.
+## 3. Second attempt: measure the speech
 
-The single most useful finding: the gravity is **syntactic, not lexical**. The vocabulary is short,
-plain, and current; what elevates it is arrangement. Nearly every failed imitation inverts this and
-reaches for `thee` and `verily`, producing Early Modern English — Shakespeare's register, centuries
-adrift from the target. That finding is the backbone of `references/syntax.md` and the reason the
-banned list in `references/lexicon.md` is as blunt as it is.
+The corpus was assembled from Wikiquote transcript pages, filtered to lines attributed to the
+character, stripped of stage directions and deduplicated: **135 passages, 351 sentences, 2,984
+words.** Then parsed and counted with a short Python script.
 
-Every example sentence in this repository is original prose composed to demonstrate a device. None
-is quoted or adapted from the books or films — which is also what makes them safe to ship.
+The corpus was used as *measurement input only*. Nothing from it is reproduced in this repository —
+the skill ships statistics and rules, and every example sentence in it is original prose written to
+demonstrate a device. This is also why it works: rules generalise, corpora get recited. A model
+handed a pile of quotations produces pastiche and quotation rather than a transferable register, and
+a corpus in `SKILL.md` would inflate the file loaded on every turn.
 
-## 3. Add the constraint the brief actually cared about
+### What the data said
 
-The requirement was a voice, not a franchise: no lore, no Shire, no hobbits. This turned out to be
-the load-bearing design constraint rather than a footnote, so it was given its own section at the
-top of `SKILL.md` ("The wall") and reinforced in two references.
+| Feature | Measured | v1 taught |
+|---|---|---|
+| Mean sentence length | 8.5 words (median 7) | Long periodic sentences |
+| Sentences ≤5 words | 36% | — |
+| Words of 8+ letters | 5.8% | — |
+| Inversion | 1% (2 of 351) | The signature device, one per answer |
+| Archaic lexicon | ~0 | A permitted list, "thin seasoning" |
+| `shall` : `will` | 1 : 34 | `shall` for resolve |
+| Contractions | ~1 sentence in 6 | Banned outright |
+| Questions / exclamations | 11% / 13% | Uniform gravity |
+| `And`/`But`/`Yet` openers | 7% | Correctly identified |
+| Aphorisms | 5%, ~12 words | Correctly identified, wrong length |
+| Semicolons / em-dashes | 5 / 0 per 3,000 words | Used freely in examples |
+
+One hypothesis was tested and refuted. Contractions might plausibly track register — absent in grave
+oratory, present in casual talk, which would fit the scholarly point about his versatility. Splitting
+sentences by whether they carry weighty abstract nouns gave 17% contracted in both groups. The
+distribution is flat. The blanket ban had no basis.
+
+### The actual trap
+
+**Gravity comes from compression, not elaboration.** He says less than an ordinary speaker, not
+more. Every instinct — and v1 — pulls toward building sentences up. The real register cuts them
+down.
+
+This is the equivalent of caveman's `cfg` insight: the thing that feels like it serves the goal
+(elaborate syntax, archaic words, rolling cadence) actively defeats it. And it makes the two skills
+closer relatives than expected — both reward compression, for different reasons.
+
+## 4. The constraint the brief actually cared about
+
+A voice, not a franchise: no lore, no Shire, no hobbits. This turned out to be load-bearing rather
+than a footnote, so it has its own section at the top of `SKILL.md` and is reinforced in two
+references.
 
 It is also the constraint most likely to fail under pressure, because thematically adjacent
 questions — journeys, doors, fire, small brave things — invite pattern completion toward famous
-lines. `SKILL.md` names those triggers explicitly so the pull is recognised as a trap rather than an
-invitation.
+lines. `SKILL.md` names those triggers explicitly so the pull is recognised as a trap.
 
-## 4. Structure for progressive disclosure
+## 5. Structure for progressive disclosure
 
-`SKILL.md` holds what is needed on every turn (~2.2k tokens). The deep material — sentence
-mechanics, full lexicon, failure catalogue — sits in `references/` and loads only when the prose is
-actually going wrong, with `SKILL.md` naming the symptom that should send you to each file.
+`SKILL.md` holds what is needed every turn (~2.3k tokens), including the measurement table, since
+those targets are what keep the register from drifting long. The deep material — sentence mechanics,
+lexicon, failure catalogue — sits in `references/` and loads only when the prose is going wrong,
+with `SKILL.md` naming the symptom that should send you to each file.
 
-This keeps the per-turn cost at roughly 2.2k tokens rather than 7.4k, and it is the same instinct as
-caveman's refusal to spend tokens on abbreviations that buy nothing.
+This holds the per-turn cost near 2.3k tokens rather than ~8k.
 
-## 5. Report the costs honestly
+## 6. Report the costs honestly
 
-Caveman's repository includes a document explaining when its savings evaporate. The equivalent here
-is `docs/HONEST-TOKENS.md`, and it opens by stating that this skill costs tokens rather than saving
-them, because an elevated register is inherently longer than a neutral one.
+`docs/HONEST-TOKENS.md` is the equivalent of caveman's honest-numbers document. It was revised after
+recalibration: v1 claimed the skill would cost 15–50% more output tokens, on the assumption the
+register was elaborate. Since the register is actually terse, the direction reversed. The superseded
+estimate is kept visible in that file rather than quietly deleted.
 
-The output-overhead figures in that file are labelled as estimates, since no benchmark has been run.
-Publishing a precise percentage without measuring it would be the exact false certainty that
-`references/failure-modes.md` §8 identifies as the one failure this voice cannot survive.
+The current figures are labelled as estimates, because no benchmark has been run. Publishing a
+precise percentage without measuring it would repeat the mistake this whole document is about.
+
+## 7. What would improve it further
+
+- **Run the benchmark.** Ten representative prompts, with and without, output tokens recorded. The
+  cost figures are currently reasoned, not measured.
+- **Separate the book and film registers.** The corpus is film-transcript-weighted. The novels'
+  dialogue is more formal, and a `book` / `film` axis would likely be a real distinction rather than
+  an invented one.
+- **Automate the structural check.** Median sentence length, share of ≤5-word sentences, and share
+  of 8+-letter words can all be computed from generated output. That would turn "does this sound
+  right" into a regression test.

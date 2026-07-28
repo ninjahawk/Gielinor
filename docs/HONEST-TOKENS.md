@@ -1,73 +1,88 @@
 # Honest token accounting
 
-The caveman skill ships a `docs/HONEST-NUMBERS.md` explaining when its savings are real and when the
-overhead costs more than it saves. This file does the same job, and the headline is less flattering.
+The caveman skill ships a `docs/HONEST-NUMBERS.md` explaining when its savings are real and when
+overhead costs more than it saves. This file does the same job.
 
-## This skill does not save tokens. It spends them.
-
-Caveman and this skill share an architecture but have opposite objectives. Caveman compresses:
-it strips articles, filler, and hedging, so the same information arrives in fewer output tokens.
-This skill elevates: it removes contractions, adds subordinate structure, and prefers the periodic
-sentence to the flat one. Those are the mechanics of gravity, and gravity costs words.
-
-Adopt it because you want the voice. Do not adopt it to reduce your bill.
-
-## Input cost
-
-`SKILL.md` is loaded on every turn the skill is active.
-
-| File | Bytes | Approx. tokens | When loaded |
-|---|---|---|---|
-| `skills/gandalf/SKILL.md` | 8,723 | ~2,200 | Every turn while active |
-| `references/syntax.md` | 8,171 | ~2,050 | On demand only |
-| `references/lexicon.md` | 6,859 | ~1,700 | On demand only |
-| `references/failure-modes.md` | 5,899 | ~1,500 | On demand only |
-
-For comparison, caveman's `SKILL.md` is 5,227 bytes. This one is larger because teaching a *voice*
-requires worked examples, and examples are the highest-value content in a style skill — a rule like
-"use periodic sentences" transmits far less than one sentence demonstrating it.
-
-The three reference files total ~21KB. Keeping them out of `SKILL.md` is the single most important
-token decision in the project: it holds the per-turn cost at ~2.2k tokens instead of ~7.4k, while
-losing nothing, because the deep material is only needed when the prose is actually going wrong.
-This is Anthropic's progressive-disclosure pattern, and it is the same instinct behind caveman's
-refusal to invent abbreviations — spend tokens only where they buy something.
+**This document was substantially revised after the skill was recalibrated.** The first version
+claimed the skill would cost 15–50% more output tokens, on the assumption that the register was
+elaborate. Measurement showed the opposite. That earlier estimate was wrong, and the correction is
+kept visible here rather than quietly deleted.
 
 ## Output cost
 
-These are **estimates, not measurements.** No benchmark has been run against this skill, and stating
-a precise percentage without one would be exactly the false certainty that `failure-modes.md`
-warns against.
+The register turned out to be **short**. Measured across ~3,000 words of source dialogue:
 
-| Level | Expected change vs. a neutral reply |
+| Feature | Measured |
 |---|---|
-| **lite** | Roughly neutral. Contractions removed (costs), but pleasantries, filler, and hedging removed too (saves). Plausibly a small net saving |
-| **full** | Longer. Perhaps 15–30% |
-| **ultra** | Longer still. Perhaps 30–50% |
+| Mean sentence length | 8.5 words |
+| Median sentence length | 7 words |
+| Sentences of 5 words or fewer | 36% |
+| Words of 1–4 letters | 68% |
+| Words of 8+ letters | 5.8% |
 
-Two rules in `SKILL.md` exist specifically to keep this from getting worse: *grave, not wordy* and
-the instruction that ultra means heavier rather than longer. Padding is the failure mode that makes
-a style skill genuinely expensive, and `failure-modes.md` §5 treats it as a defect to repair rather
-than a natural consequence of the register.
+Ordinary written English runs 15–20 words per sentence. This is roughly half that, built almost
+entirely from short words. The skill therefore pushes output *down*, not up.
+
+Estimated change against a neutral assistant reply — **estimates, not measurements**, since no
+benchmark has been run:
+
+| Level | Expected change |
+|---|---|
+| **lite** | Meaningfully shorter. Filler, hedging and pleasantries removed, sentences shortened |
+| **full** | Shorter. The compression discipline outweighs what little the aphorism adds |
+| **ultra** | Shortest. `ultra` means more compressed, not grander |
+
+Stating a precise percentage without measuring would be the exact false certainty that
+`references/failure-modes.md` §10 identifies as the one failure this voice cannot survive. If you
+want real numbers, the method is at the bottom of this file.
+
+The honest framing: adopt this because you want the voice. Any output saving is a side effect of the
+register genuinely being terse — welcome, but not the reason to install it.
+
+## Input cost
+
+This is the real cost, and it is unavoidable. `SKILL.md` loads on every turn the skill is active.
+
+| File | Bytes | Approx. tokens | When loaded |
+|---|---|---|---|
+| `skills/gandalf/SKILL.md` | 9,177 | ~2,300 | Every turn while active |
+| `references/syntax.md` | 8,054 | ~2,000 | On demand only |
+| `references/failure-modes.md` | 7,173 | ~1,800 | On demand only |
+| `references/lexicon.md` | 6,264 | ~1,550 | On demand only |
+
+For comparison, caveman's `SKILL.md` is 5,227 bytes. This one is larger because teaching a *voice*
+needs worked examples and a table of measured targets. A rule like "keep sentences short" transmits
+far less than a median figure plus three examples at different levels.
+
+The references total ~21KB. Keeping them out of `SKILL.md` is the most important token decision in
+the project: it holds the per-turn cost near 2.3k tokens instead of ~8k, and loses nothing, because
+the deep material is only needed when the prose is actually going wrong. This is the
+progressive-disclosure pattern, and it is the same instinct behind caveman's refusal to invent
+abbreviations — spend tokens only where they buy something.
+
+On a long session the input cost is the larger number by a wide margin. Any honest accounting has to
+lead with it.
 
 ## Measuring it yourself
-
-If you want real numbers rather than estimates, the method caveman used works here:
 
 1. Pick 10 prompts representative of your actual work.
 2. Run each with the skill inactive; record output tokens.
 3. Run each with the skill at a fixed level; record output tokens.
-4. Report the mean *and* the range. A single averaged percentage hides the fact that short factual
-   answers barely change while explanatory ones swing widely.
+4. Report the mean **and** the range. A single averaged percentage hides that short factual answers
+   barely move while explanatory ones swing widely.
+5. Add the ~2.3k per-turn input cost to whatever you find.
 
-Add the ~2.2k per-turn input cost to whatever you find. On a long session that is the larger number
-by far, and any honest accounting has to include it.
+There is also a cheaper structural check that needs no API calls, described in
+`references/failure-modes.md`: parse a sample of output and compute median sentence length, the
+share of sentences at five words or fewer, and the share of words reaching eight letters. If those
+track the corpus figures, the register is being applied. If they drift long, it is not — and the
+output is costing more than it should.
 
 ## When it is worth the cost
 
 Worth it: design discussions and architectural pushback, security and risk conversations, code
-review where softened language lets real problems slide, and any situation where you want an
-assistant that will tell you plainly that your plan is bad.
+review where softened language lets real problems slide, and anywhere you want an assistant that
+will tell you plainly that your plan is bad.
 
-Not worth it: long autonomous agentic loops where nobody reads the prose, high-volume API work,
-and anything where output length is itself the constraint. Use `lite`, or leave it off.
+Not worth it: long autonomous agentic loops where nobody reads the prose, and high-volume API work
+where the ~2.3k per-turn input cost dominates any output saving. Leave it off.
