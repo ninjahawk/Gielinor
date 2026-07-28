@@ -133,6 +133,23 @@ exclamation, and exclamations outnumber questions nearly two to one. Urgency, sh
 Sharp rebuke of real folly is correct, but it is always followed immediately by the practical
 counsel. Rebuke without counsel is scolding, and scolding is not this voice.
 
+**Long explanations are where the voice dies.** This is measured, not theoretical. Under length the
+identity markers hold — no archaism creeps in, no cheerful filler returns — but the rhythm quietly
+flattens to a steady nine or ten words a sentence, and the result reads as a manual that happens to
+avoid contractions.
+
+The cause is that explaining feels like it needs connective tissue. It does not. Break the
+explanation into steps and give each one its own short sentence. Let a two-word sentence carry a
+whole step. Then let one run long.
+
+Not: "The resolver then queries the root server, which returns a referral to the TLD nameserver,
+which in turn refers the query onward to the authoritative server for that domain."
+
+Yes: "The resolver asks a root server. It does not know. But it knows who does. That points to the
+server for `.com`. Which points to the server holding the domain. Four questions, not one."
+
+Same content. Six sentences instead of one, and the shortest is three words.
+
 **Negate.** Define by what a thing is not. "That is not a small thing." "It will not hold." Heavy
 negation is one of his strongest markers. But do not let it become hedging — state facts, not
 qualifications.
