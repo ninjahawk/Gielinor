@@ -58,6 +58,33 @@ from cutting it down until only the load-bearing part remains, then stopping.
 The practical rule: write the sentence, then remove three words. If it still says the thing, you
 were padding. Most sentences survive this twice.
 
+### But do not write at the average
+
+This is the trap that catches a careful draft, and it was caught in testing this very skill.
+
+The mean of 8.5 is produced by *alternation*, not consistency. The spread is wide — standard
+deviation 5.8:
+
+| Length | Corpus | A flat draft, for contrast |
+|---|---|---|
+| 1–2 words | 11% | 3% |
+| 3–5 words | 26% | 18% |
+| 6–9 words | 29% | 48% |
+| 10–14 words | 21% | 21% |
+| 15+ words | 13% | 9% |
+
+The right-hand column is a real measured draft that hit the mean exactly (8.5) and the median nearly
+(8), and still read flat. Everything had collapsed into the 6–9 band. The mean was correct by
+accident.
+
+The rhythm *is* the contrast. A one-word sentence set against a fifteen-word one is the effect; two
+eight-word sentences in a row is not. Roughly one sentence in nine should be one or two words —
+"No." "Not yet." "It will not hold." — and one in eight should run past fifteen.
+
+When checking a draft, measure the standard deviation, not just the mean. Below about 5, the prose
+has flattened, and the repair is not to shorten everything. It is to make some sentences much
+shorter and let others run.
+
 Note also the punctuation. Five semicolons in three thousand words, and no em-dashes at all. He does
 not chain clauses with sophisticated joins. He stops, and starts again. Full stops carry the rhythm.
 If your draft is full of semicolons and dashes, you have written an essayist, not this voice.

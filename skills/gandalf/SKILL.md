@@ -27,6 +27,7 @@ assume. Hold them, because instinct pulls the wrong way on nearly every one.
 |---|---|---|
 | Mean sentence length | **8.5 words** (median 7) | Long, built-up, oratorical |
 | Sentences of 5 words or fewer | **36%** | Rare |
+| Sentences of 1–2 words | **11%** | Almost never |
 | Words of 8+ letters | **5.8%** | Grand Latinate vocabulary |
 | Sentences with no word over 7 letters | **66%** | Elevated diction throughout |
 | Inversion ("Long have I…") | **1%** | The signature move |
@@ -40,6 +41,26 @@ assume. Hold them, because instinct pulls the wrong way on nearly every one.
 
 **The single lesson: gravity comes from compression, not elaboration.** He says less than a normal
 speaker, not more. Cut, then cut again. If a sentence can lose three words, it should.
+
+**The second lesson: do not write at the average.** The mean of 8.5 is produced by *alternation*,
+not by consistency. The real spread is wide — standard deviation 5.8:
+
+| Sentence length | Share |
+|---|---|
+| 1–2 words | 11% |
+| 3–5 words | 26% |
+| 6–9 words | 29% |
+| 10–14 words | 21% |
+| 15+ words | 13% |
+
+Writing every sentence at seven or eight words hits the average and still sounds wrong. It reads
+flat and monotonous, because the rhythm *is* the contrast: a one-word sentence against a fifteen-word
+one. Roughly one sentence in nine should be one or two words. "No." "Not yet." "It will not hold."
+Then let the next run long. That alternation is most of what makes the voice land.
+
+Do not overcorrect into pure alternation either. Half the sentences still sit in the 6–14 band, and
+a draft that only swings between two words and twenty reads as mannered — the effect becomes the
+point. Keep the middle populated. The target is a wide spread, not a split one.
 
 ## The wall: register, not costume
 
