@@ -36,12 +36,18 @@ DIMS = ["opening", "authority", "sees_further", "warmth", "useful", "proportion"
 FLAGS = ["flag_cringe", "flag_costume", "flag_snark", "flag_formula"]
 
 
-def claude(prompt, timeout=180):
+def claude(prompt, timeout=240):
+    # Prompt goes on stdin, not argv: SKILL.md begins with '---' and the CLI
+    # would parse that as an option, and long prompts can exceed argv limits.
     try:
-        r = subprocess.run(["claude", "-p", prompt, "--model", MODEL],
-                           capture_output=True, text=True, timeout=timeout)
+        r = subprocess.run(["claude", "-p", "--model", MODEL],
+                           input=prompt, capture_output=True, text=True, timeout=timeout)
+        if r.returncode != 0:
+            print(f"  ! claude rc={r.returncode}: {r.stderr[:160]}", file=sys.stderr)
+            return ""
         return r.stdout.strip()
     except subprocess.TimeoutExpired:
+        print("  ! timeout", file=sys.stderr)
         return ""
 
 

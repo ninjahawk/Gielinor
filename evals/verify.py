@@ -31,7 +31,10 @@ ARCHAIC = re.compile(r"\b(thee|thou|thy|thine|ye|tis|twas|hath|doth|verily|forso
 LORE = re.compile(r"\b(shire|hobbit|mordor|sauron|saruman|gondor|rohan|frodo|bilbo|gandalf|"
                   r"balrog|moria|orc|elves|elvish|dwarves|middle.?earth|the one ring|"
                   r"wizard|staff|beard|robes)\b", re.I)
-STAGE = re.compile(r"\*[^*]{2,40}\*")
+# Two distinct failures, kept apart so a real one cannot hide behind a mislabel:
+# roleplay narration, and decorative markdown that turns speech into a document.
+STAGE = re.compile(r"\*(?:[a-z]+s|[a-z]+ing)\b[^*]{0,40}\*")          # *leans forward*, *eyes twinkling*
+MARKDOWN = re.compile(r"(?m)^\s*(?:#{1,6}\s+\S.*|[-*+]\s+\S.*)$|\*\*[^*\n]+\*\*|^\s*\|.+\|\s*$")
 ASSISTANT = re.compile(r"\b(happy to help|feel free|hope (this|that) helps|great question|"
                        r"certainly[!,]|of course[!,]|let me know if|i'd be glad|absolutely[!,]|"
                        r"as an ai|i cannot assist)\b", re.I)
@@ -63,6 +66,7 @@ def analyse_one(text):
         "archaic": ARCHAIC.findall(text),
         "lore": LORE.findall(text),
         "stage": STAGE.findall(text),
+        "markdown": [m.strip()[:48] for m in MARKDOWN.findall(re.sub(r"```.*?```","",text,flags=re.S)) if m.strip()],
         "assistant": ASSISTANT.findall(text),
         "fortune": FORTUNE.findall(text),
         "first_sentence": sents[0],
@@ -78,7 +82,8 @@ def check(responses):
 
     # ---------- hard bans (any occurrence is a failure) ----------
     for name, key in [("archaism", "archaic"), ("lore", "lore"), ("stage direction", "stage"),
-                      ("assistant-filler", "assistant"), ("fortune-cookie", "fortune")]:
+                      ("assistant-filler", "assistant"), ("fortune-cookie", "fortune"),
+                      ("markdown-formatting (speech, not a document)", "markdown")]:
         hits = {k: v[key] for k, v in per.items() if v[key]}
         if hits:
             fails.append(f"{name}: {sum(len(x) for x in hits.values())} in {len(hits)} responses -> "
